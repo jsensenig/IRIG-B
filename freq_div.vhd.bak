@@ -1,0 +1,44 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+ENTITY freq_div IS 
+  GENERIC(
+    FREQ_IN: INTEGER:=125000000;
+    FREQ_OU: INTEGER:=1000
+  );
+  PORT(
+    clk_in	:IN STD_LOGIC;
+    clk_ou	:IN STD_LOGIC
+  );
+END entity freq_div;
+
+
+ARCHITECTURE funcional OF freq_div IS
+  CONSTANT max_cnt: INTEGER:=FREQ_IN/FREQ_OU;
+  SIGNAL cnt: INTEGER:=0;
+BEGIN
+  
+  contar:PROCESS(clk_in)
+  BEGIN
+    IF clk_in'event and clk_in='1' THEN
+      IF cnt=(max_cnt1-1) THEN
+	cnt<=0;
+      ELSE
+	cnt<=cnt+1;
+      END IF;
+  END PROCESS contar;
+
+  sal:PROCESS(clk_in)
+  BEGIN
+    IF clk_in'event and clk_in='1' THEN
+      IF cnt<(max_cnt/2) THEN
+	clk_ou<='0';
+      ELSE
+	clk_ou<='1';
+      END IF;
+    ENDIF;
+  END PROCESS sal;
+
+END ARCHITECTURE funcional;

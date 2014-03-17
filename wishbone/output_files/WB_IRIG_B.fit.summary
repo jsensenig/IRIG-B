@@ -1,0 +1,16 @@
+Fitter Status : Successful - Tue Mar 11 12:39:50 2014
+Quartus II 32-bit Version : 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition
+Revision Name : WB_IRIG_B
+Top-level Entity Name : wb_irig_b
+Family : Cyclone III
+Device : EP3C16U484C6
+Timing Models : Final
+Total logic elements : 1,369 / 15,408 ( 9 % )
+    Total combinational functions : 1,281 / 15,408 ( 8 % )
+    Dedicated logic registers : 311 / 15,408 ( 2 % )
+Total registers : 311
+Total pins : 82 / 347 ( 24 % )
+Total virtual pins : 0
+Total memory bits : 0 / 516,096 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 112 ( 0 % )
+Total PLLs : 0 / 4 ( 0 % )
