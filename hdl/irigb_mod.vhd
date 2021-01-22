@@ -74,7 +74,7 @@ BEGIN
 				hour_s <= "00000";
 				day_s  <= "000000001";
 				year_s <= "000000000000";
-			ELSIF update_i = '1' THEN
+			ELSIF update_i = '1' THEN -- Set the time and update on the rising edge of the next PPS
 				aux := CONV_INTEGER(unsigned(sec))+1;
 				sec_s   <= sec+"000001";
 				min_s   <= min;
@@ -123,11 +123,11 @@ BEGIN
 			
 		ELSE
 			IF rising_edge(clk_in) THEN
-				IF tmp = 9 THEN
+				IF tmp = 9 THEN -- 10ms bit period
 					tmp <= 0;
-					IF cnt = 99 THEN
+					IF cnt = 99 THEN 
 						cnt <= 0;
-					ELSE
+					ELSE -- count the 100 bits in the frame
 						cnt <= cnt + 1;
 					END IF;
 				ELSE
@@ -137,15 +137,26 @@ BEGIN
 		END IF;
 	END PROCESS ctrlclk;
 
+  -- This proccess encodes the 100 bits of the IRIG-B frame
+  -- 3 symbols in the frame
+  -- MARKER: 8ms LOGIC 1: 5ms LOGIC 0: 2ms
+  -- Double MARKER indicates start of frame
+
+  --      MARKER      MARKER      0            1           1
+  --     ________    ________    __          _____       _____
+  --  __|        |__|        |__|  |________|     |_____|     |_____ ....
+  --
+
+
 	ctrlout:PROCESS(cnt, tmp)
 	BEGIN
-		IF enable = '1' THEN
+    IF enable = '1' THEN -- This selects the 8ms markers
 			IF(cnt = 0 or cnt = 9 or cnt = 19 or cnt = 29 or cnt = 39 or cnt = 49 or cnt = 59 or cnt = 69 or cnt = 79 or cnt = 89 or cnt = 99) THEN
 				IF(tmp < 8) THEN
 					output <= '1';
 				ELSE
 					output <= '0';
-				END IF;
+				END IF;  -- This selects the unused bits
 			ELSIF(cnt = 5 or cnt = 14 or cnt = 18 or cnt = 24 or cnt = 27 or cnt = 28 or cnt = 34 or(cnt > 41 and cnt < 50) or cnt = 54 or(cnt > 59 and cnt < 69) or(cnt > 69 and cnt < 79) or cnt = 98) THEN
 				IF(tmp < 2) THEN
 					output <= '1';
@@ -216,6 +227,11 @@ BEGIN
 			output <= '0';
 		END IF;
 	END PROCESS ctrlout;
+
+  -- At the beginning of each IRIG-B frame cast the time values from decimal to
+  -- the timecode hex bit i.e. the 9 bits are (e.g. decimal: seconds = 34 = 100010 to hex: 0110100)
+  -- bits: 1 2 3 4 5 6  7  8  9
+  -- hex:  1 2 4 8 x 10 20 40 80
 
 	ctrlcon:PROCESS(clk_in)
 		VARIABLE aux		:STD_LOGIC_VECTOR(9 DOWNTO 0) := "0000000000";

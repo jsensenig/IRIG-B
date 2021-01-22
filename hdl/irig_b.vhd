@@ -42,8 +42,8 @@ ARCHITECTURE functional OF irig_b IS
 
 	COMPONENT irigb_mod 
 		PORT(
-			clk_in	:IN STD_LOGIC;
-			pps_in	:IN STD_LOGIC;
+			clk_in	:IN STD_LOGIC; -- 10MHz clock in
+			pps_in	:IN STD_LOGIC; -- Not neccessary, using internal PPS
 			enable	:IN STD_LOGIC;
 			reset		:IN STD_LOGIC;
 			update	:IN STD_LOGIC;
@@ -63,9 +63,9 @@ BEGIN
 
 	divisor: freq_div
 		PORT MAP(
-			clk_in  => clk,
-			pps     => pps_i,
-			clk_out => clock
+			clk_in  => clk,   --10MHz clock in
+			pps     => pps_i, 
+			clk_out => clock  -- 1kHz clock out
 		);
 
 	irig: irigb_mod
